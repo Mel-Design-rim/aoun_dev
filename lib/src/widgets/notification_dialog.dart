@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:aoun_dev/src/utils/constants.dart';
+import 'package:aoun_dev/src/services/api_notifications.dart';
 
 class NotificationDialog extends StatelessWidget {
   const NotificationDialog({super.key});
@@ -39,22 +40,30 @@ class NotificationDialog extends StatelessWidget {
               ],
             ),
             const Divider(color: primaryColor),
-            _buildNotificationItem(
-              'تم إضافة مشروع جديد',
-              'تم إضافة مشروع "بناء مسجد" إلى قائمة المشاريع',
-              '10:30 ص',
-            ),
-            _buildNotificationItem(
-              'تحديث حالة المشروع',
-              'تم تحديث حالة مشروع "كفالة يتيم" إلى 75%',
-              'أمس',
-            ),
+            notify.length > 0
+                ? Expanded(
+                  child: ListView.builder(
+                    itemCount: notify.length,
+                    itemBuilder: (context, index) {
+                      return _buildNotificationItem(
+                        notify[index]['title'] ?? '',
+                        notify[index]['body'] ?? '',
+                        notify[index]['time'] ?? '',
+                      );
+                    },
+                  ),
+                )
+                : const Center(
+                  child: Text(
+                    'لا يوجد إشعارات',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
             const SizedBox(height: 10),
             Center(
               child: TextButton(
                 onPressed: () {
                   // Handle view all notifications
-                  
                 },
                 child: const Text(
                   'عرض كل الإشعارات',

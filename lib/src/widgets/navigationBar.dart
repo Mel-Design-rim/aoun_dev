@@ -55,7 +55,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       ),
     );
   }
-  
+
   Widget _buildNavItem(
     IconData outlinedIcon,
     IconData filledIcon,
