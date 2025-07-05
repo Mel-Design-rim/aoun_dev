@@ -39,7 +39,7 @@ Widget logos(String imagePath) {
         ),
       ),
     ),
-  );
+    );
 }
 
 Widget miniCards(
@@ -58,7 +58,7 @@ Widget miniCards(
               navigatorKey.currentContext!,
               MaterialPageRoute(
                 builder:
-                    (context) => ProjectDetailsScreen(projectData: projectData),
+                    (context) => ProjectDetailsScreen(projectId: projectData['id']),
               ),
             );
           }
@@ -72,6 +72,7 @@ Widget miniCards(
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
+        
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -150,14 +151,31 @@ Widget miniCards(
   );
 }
 
-Widget largCards(String imagePath, String title, String ets, double done) {
-  return Card(
-    clipBehavior: Clip.hardEdge,
-    elevation: 10,
-    borderOnForeground: true,
-    margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-    child: Stack(
+Widget largCards(
+  String imagePath,
+  String title,
+  String ets,
+  double done, {
+  Map<String, dynamic>? projectData,
+}) {
+  return InkWell(
+    onTap: () {
+      if (projectData != null) {
+        Navigator.push(
+          navigatorKey.currentContext!,
+          MaterialPageRoute(
+            builder: (context) => ProjectDetailsScreen(projectId: projectData['id']),
+          ),
+        );
+      }
+    },
+    child: Card(
+      clipBehavior: Clip.hardEdge,
+      elevation: 10,
+      borderOnForeground: true,
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Stack(
       children: [
         // Background image that covers the entire card
         Positioned.fill(child: Image.asset(imagePath, fit: BoxFit.cover)),
@@ -270,5 +288,6 @@ Widget largCards(String imagePath, String title, String ets, double done) {
         ),
       ],
     ),
+  )
   );
 }

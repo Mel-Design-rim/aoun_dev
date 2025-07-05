@@ -44,12 +44,11 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
             'المشاريع',
             1,
           ),
-          _buildNavItem(Icons.person_outline, Icons.person, 'الحساب', 2),
           _buildNavItem(
             Icons.notifications_outlined,
             Icons.notifications,
             'الإشعارات',
-            3,
+            2,
           ),
         ],
       ),

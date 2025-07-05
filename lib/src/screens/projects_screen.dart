@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:aoun_dev/src/utils/constants.dart';
 import 'package:aoun_dev/src/screens/project_details_screen.dart';
+import 'package:aoun_dev/src/controllers/project_controller.dart';
+import 'package:get/get.dart';
 
 class ProjectsScreen extends StatefulWidget {
   const ProjectsScreen({super.key});
@@ -21,18 +23,8 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     'مساعدة',
   ];
 
-  // Sample project data
-  final List<Map<String, dynamic>> _projects = List.generate(
-    8,
-    (index) => {
-      'id': index,
-      'type': 'سقاية',
-      'description':
-          'المساهمة في توفير مياه نقية للفئات المحتاجة في رمضان من خلال حفر الآبار وإنشاء محطات التصفية والتوزيع.',
-      'image': 'assets/images/imagesForTest/1.png',
-      'details': 'تفاصيل المشروع تظهر هنا بشكل كامل عند فتح صفحة التفاصيل',
-    },
-  );
+  // Project controller
+  final ProjectController _projectController = Get.find<ProjectController>();
 
   @override
   Widget build(BuildContext context) {
@@ -136,14 +128,30 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
 
             // Project list
             Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                itemCount: _projects.length,
-                itemBuilder: (context, index) {
-                  final project = _projects[index];
-                  return _buildProjectCard(project);
-                },
-              ),
+              child: Obx(() {
+                if (_projectController.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                
+                final projects = _projectController.projects;
+                if (projects.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'لا توجد مشاريع متاحة',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  );
+                }
+                
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  itemCount: projects.length,
+                  itemBuilder: (context, index) {
+                    final project = projects[index];
+                    return _buildProjectCard(project);
+                  },
+                );
+              }),
             ),
           ],
         ),
@@ -212,13 +220,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
             child: IconButton(
               icon: const Icon(Icons.arrow_forward, color: Colors.white),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) => ProjectDetailsScreen(projectData: project),
-                  ),
-                );
+                Get.to(() => ProjectDetailsScreen(projectId: project['id']));
               },
             ),
           ),
